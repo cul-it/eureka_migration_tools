@@ -6,7 +6,11 @@ load_dotenv()
 import csv
 import requests
 
-def _okapi_login():
+
+outputCap_JSON = f"{os.getenv("BASE_DIR")}{os.getenv("FILE_EUREKA_CAPABILITIES")}.json"
+outputCapSets_JSON = f"{os.getenv("BASE_DIR")}{os.getenv("FILE_EUREKA_CAPABILITY_SETS")}.json"
+
+def _login():
     url = f"{os.getenv('EUREKA_URL')}/authn/login-with-expiry"
     headers = {
         "X-Okapi-Tenant": os.getenv("EUREKA_TENANT"),
@@ -25,24 +29,31 @@ def _okapi_login():
         return cookieData
     return None
 
-cookieData = _okapi_login()
+cookieData = _login()
+passCookie = {'folioAccessToken': cookieData['folioAccessToken']}
+passHeader = {
+        "X-Okapi-Tenant": os.getenv("EUREKA_TENANT"),
+        "Content-Type":"application/json"
+}
 def _get_capabilities():
-    url = f"{os.getenv('EUREKA_URL')}/capability-sets?limit=10000000"
-    r = requests.get(url, cookies={'folioAccessToken': cookieData['folioAccessToken']})
+    url = f"{os.getenv('EUREKA_URL')}/capabilities?limit=10000000"
+    r = requests.get(url, cookies=passCookie, headers=passHeader)
     jsonData = r.json()
 
-    with open(os.getenv('FILE_EUREKA_CAPABILITIES'), 'w') as f:
+    with open(outputCap_JSON, 'w') as f:
             json.dump(jsonData, f, indent=4)  # Save with indentation for readability
+    print(f"Saved Capabilities JSON file {outputCap_JSON}")
 
 def _get_capability_sets():
-    cookieData = _okapi_login()
-    url = f"{os.getenv('EUREKA_URL')}/capability?limit=10000000"
-    r = requests.get(url, cookies={'folioAccessToken': cookieData['folioAccessToken']})
+    url = f"{os.getenv('EUREKA_URL')}/capability-sets?limit=10000000"
+    r = requests.get(url, cookies=passCookie, headers=passHeader)
     jsonData = r.json()
 
-    with open(os.getenv('FILE_EUREKA_CAPABILITY_SETS'), 'w') as f:
+    with open(outputCapSets_JSON, 'w') as f:
             json.dump(jsonData, f, indent=4)  # Save with indentation for readability
+    print(f"Saved Capability Sets JSON file {outputCapSets_JSON}")
 
-print(_okapi_login())
+
 _get_capabilities()
 _get_capability_sets()
+print("------ Complete -----")

@@ -6,6 +6,8 @@ load_dotenv()
 import csv
 import requests
 
+output_JSON = f"{os.getenv("BASE_DIR")}{os.getenv("FILE_OKAPI_PERMISSIONS")}.json"
+
 def _okapi_login():
     url = f"{os.getenv('OKAPI_URL')}/authn/login-with-expiry"
     headers = {
@@ -31,8 +33,10 @@ def _get_permissions():
     r = requests.get(url, cookies={'folioAccessToken': cookieData['folioAccessToken']})
     jsonData = r.json()
 
-    with open(os.getenv('FILE_OKAPI_PERMISSIONS'), 'w') as f:
+    with open(output_JSON, 'w') as f:
             json.dump(jsonData, f, indent=4)  # Save with indentation for readability
+    print(f"Saved OKAPI Permissions file {OKAPI_URL}")
 
 
 _get_permissions()
+print("------ Complete -----")
