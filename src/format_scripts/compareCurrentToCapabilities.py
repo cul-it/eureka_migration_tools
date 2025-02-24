@@ -13,6 +13,7 @@ output_JSON = f"{os.getenv("BASE_DIR")}{os.getenv("FILE_COMPARED_CURRENT_TO_CAPA
 output_CSV = f"{os.getenv("BASE_DIR")}{os.getenv("FILE_COMPARED_CURRENT_TO_CAPABILITIES")}.csv"
 
 def compare_current_permissions():
+    print("""Starting Comparison of OKAPI Permission Sets to Eureka Capabilities.""")
     print(okapiPath_JSON)
     # Pull the JSON file containing the Eureka Capability Sets and ingest it as JSON.
     if os.path.isfile(okapiPath_JSON):  # Check if the file exists
@@ -81,7 +82,7 @@ def compare_current_permissions():
 
 
     finalData = []
-    print("------ Starting Comparison -----")
+    print("------ Starting the Final Comparison -----")
     for i in refSets:
         x = False
         subData = _build_sub_permissions(i['allSubPermissions'])
@@ -97,8 +98,14 @@ def compare_current_permissions():
 
     with open(output_JSON, 'w') as f:
             json.dump(finalData, f, indent=4)  # Save with indentation for readability
-    print(f"Saved Comparison JSON file {output_JSON}")
+    print(f"""
+          Comparison of OKAPI Permission Sets to Eureka Capabilities has been processed and saved to the local file system.
+          file: {output_JSON}
+                        ------ Script Complete -----
+""")
 
+
+    print("------ Reformating to CSV file -----")
     flattened_data = []
     test = ''
     for m in finalData:
@@ -129,7 +136,10 @@ def compare_current_permissions():
             'eurekaId', 'eurekaName', 'eurekaDescription', 'eurekaType', 'eurekaAction', 'eurekaResource'
         ])
         writer.writerows(flattened_data)
-    print(f"Saved Comparison CSV file {output_CSV}")
-
-compare_current_permissions()
-print("------ Complete -----")
+    print(f"""
+          Reformated CSV file has been saved to the local file system.
+          file: {output_CSV}
+                        ------ Script Complete -----
+""")
+    
+    

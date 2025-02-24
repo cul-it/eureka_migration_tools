@@ -12,6 +12,7 @@ output_JSON = f"{os.getenv("BASE_DIR")}{os.getenv("FILE_COMPARED_SETS_TO_PERMISS
 output_CSV = f"{os.getenv("BASE_DIR")}{os.getenv("FILE_COMPARED_SETS_TO_PERMISSIONS")}.csv"
 
 def combine_data():
+    print("""Comparing OKAPI Permissions to Eureka Capabilities""")
     import json
 
     # Pull the JSON file containing the OKAPI permissions and ingest it as JSON.
@@ -71,7 +72,7 @@ def combine_data():
     
 
     # Loop through all the capability sets and 
-    print("------ Starting Comparison -----")
+    print("------ Starting to processes Comparison -----")
     for r in eurekaSets["capabilitySets"]:
         r["okapiName"] = ""
         r["okapiSubPermissions"] = []
@@ -85,7 +86,11 @@ def combine_data():
                 r["okapiId"] = o["id"]
     with open(output_JSON, 'w') as file:
         json.dump(eurekaSets, file, indent=4)
-    print(f"Saved Comparison JSON file {output_JSON}")
+    print(f"""
+          The comparison of OKAPI Permissions to Eureka Capabilities has been processed and saved to the local file system.
+          file: {output_JSON}
+                        ------ Script Complete -----
+""")
 
     return eurekaSets
 
@@ -155,10 +160,14 @@ def generateCsv():
             'okapiSubPermissions.name', 'okapiSubPermissions.description', 'okapiSubPermissions.permissionName'
         ])
         writer.writerows(flattened_data)
-    print(f"Saved Comparison CSV file {output_CSV}")
+    print(f"""
+          The data has been reformated and saved as a CSV file.
+          file: {output_JSON}
+                        ------ Script Complete -----
+""")
 
     
 # Example paths to test the function
-combine_data()
-generateCsv()
-print("------ Complete -----")
+def compare_permissions_to_capability_sets():
+    combine_data()
+    generateCsv()

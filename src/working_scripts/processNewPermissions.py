@@ -16,7 +16,8 @@ output_JSON = f"{os.getenv("BASE_DIR")}{os.getenv("FILE_NEW_ROLES")}.json"
 output_CSV = f"{os.getenv("BASE_DIR")}{os.getenv("FILE_NEW_ROLES")}.csv"
 output_JSON2 = f"{os.getenv("BASE_DIR")}{os.getenv("NEW_ROLES")}_2.json"
 
-def processCapSets():
+def reprocess_cap_sets():
+    print("""loading you CSV file and Reprocessing it for more Capability Sets""")
     # Pull the JSON file containing the Eureka Capability Sets and ingest it as JSON.
     if os.path.isfile(CurrentToCapabilities_JSON):  # Check if the file exists
         with open(CurrentToCapabilities_JSON, 'r') as f:
@@ -173,6 +174,9 @@ def processCapSets():
 
     with open(output_JSON2, 'w') as file:
         json.dump(fullData, file, indent=4)
-    print(f"Saved Comparison JSON file {output_JSON2}")
+    print(f"""
+          The Reprocess has been completed and saved to the local file system.
+          file: {output_JSON2}
+                        ------ Script Complete -----
+""")
 
-processCapSets()

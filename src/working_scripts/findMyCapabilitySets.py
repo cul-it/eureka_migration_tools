@@ -15,6 +15,7 @@ output_JSON = f"{os.getenv("BASE_DIR")}{os.getenv("FILE_FIND_MY_CAPABILITIES")}.
 output_CSV = f"{os.getenv("BASE_DIR")}{os.getenv("FILE_FIND_MY_CAPABILITIES")}.csv"
 
 def find_possible_compatibility_sets():
+    print("""Find Possible Capability Sets for User Permissions in Okapi""")
     # Pull the JSON file containing the Eureka Capability Sets and ingest it as JSON.
     if os.path.isfile(CurrentToCapabilities_JSON):  # Check if the file exists
         with open(CurrentToCapabilities_JSON, 'r') as f:
@@ -66,8 +67,13 @@ def find_possible_compatibility_sets():
 
     with open(output_JSON, 'w') as file:
         json.dump(sorted_data, file, indent=4)
-    print(f"Saved Comparison JSON file {output_JSON}")
+    print(f"""
+          Possible Capability Sets for User Permissions in Okapi has been Processed and saved to the local file system.
+          file: {output_JSON}
+                        ------ Script Complete -----
+""")
 
+    print("""Reformating into CSV format""")
     flattened_data = []
     test = ''
     for m in sorted_data:
@@ -96,8 +102,9 @@ def find_possible_compatibility_sets():
             'assign_yn'
         ])
         writer.writerows(flattened_data)
-    print(f"Saved Comparison CSV file {output_CSV}")
+    print(f"""
+          CSV file was processed and saved to the local file system.
+          file: {output_CSV}
+                        ------ Script Complete -----
+""")
 
-
-find_possible_compatibility_sets()
-print("------ Complete -----")

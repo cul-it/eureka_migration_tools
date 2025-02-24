@@ -16,7 +16,8 @@ output_JSON = f"{os.getenv("BASE_DIR")}{os.getenv("FILE_WORKING_WEB_PAGE")}.json
 output_CSV = f"{os.getenv("BASE_DIR")}{os.getenv("FILE_WORKING_WEB_PAGE")}.csv"
 output_HTML  = f"{os.getenv("BASE_DIR")}{os.getenv("FILE_WORKING_WEB_PAGE")}.html"
 
-def generateWebPage():
+def generate_web_page():
+    print("""Processing data files and creating web interface""")
     # Pull the JSON file containing the Eureka Capability Sets and ingest it as JSON.
     if os.path.isfile(eurekaCapSets_JSON):  # Check if the file exists
         with open(eurekaCapSets_JSON, 'r') as f:
@@ -45,6 +46,8 @@ def generateWebPage():
     eurCapSet = eurCapSet['capabilitySets']
     eurCapSet = sorted(eurCapSet, key=lambda x: ( x['type'], x['resource']))
     okapiCur = sorted(okapiCur, key=lambda x: ( x['displayName']))
+    eurCaps = eurCaps['capabilities']
+    eurCaps = sorted(eurCaps, key=lambda x: ( x['type'], x['resource']))
 
     #-------------------
     #   Reformat data for inclusion in the HTML page.
@@ -63,7 +66,7 @@ def generateWebPage():
         newCapSet[c['id']] = c['capabilities']
     #reformat Capabilities
     newCaps = {}
-    for c in eurCaps['capabilities']:
+    for c in eurCaps:
         newCaps[c['id']] = {
             "resource": c['resource'],
             "type": c['type'],
@@ -72,11 +75,11 @@ def generateWebPage():
         }
     
 
-    def _filter_results(filter):
+    def _filter_results(data, filter):
         tmpResults = []
         resource = ''
         tmpAry = {}
-        for s in eurCapSet:
+        for s in data:
             if s['type'] == filter:
                 if resource != s['resource']:
                     if len( tmpAry ) >= 1:
@@ -101,9 +104,13 @@ def generateWebPage():
         return tmpResults
 
 
-    dataCapSets = _filter_results('data')
-    settingsCapSets = _filter_results('settings')
-    proceduralCapSets = _filter_results('procedural')
+    dataCapSets = _filter_results(eurCapSet, 'data')
+    settingsCapSets = _filter_results(eurCapSet, 'settings')
+    proceduralCapSets = _filter_results(eurCapSet, 'procedural')
+    dataCaps = _filter_results(eurCaps, 'data')
+    settingsCaps = _filter_results(eurCaps, 'settings')
+    proceduralCaps = _filter_results(eurCaps, 'procedural')
+
 
 
     with open(output_JSON, 'w') as file:
@@ -168,9 +175,14 @@ def generateWebPage():
                                 selectedValues.push(checkbox.value);
                             });
                             var cap_sets = JSON.parse(document.getElementById('cap_sets').textContent);
+                            var cap_data = JSON.parse(document.getElementById('cap_data').textContent);
                             var caps = [];
                             selectedValues.forEach((c) => {
-                                caps = [ ...caps, ...cap_sets[c]]
+                                if( cap_sets[c] ){
+                                    caps = [ ...caps, ...cap_sets[c]]
+                                }else{
+                                    caps.push(c)
+                                }
                             });
                             globalList = [...new Set(caps)];
                             console.log(selectedValues);
@@ -240,6 +252,9 @@ def generateWebPage():
     outputHtml += _gen_table(settingsCapSets, 'Settings')
     outputHtml += _gen_table(proceduralCapSets, 'Procedural')
     outputHtml += '<h2>Capabilities</h2>'
+    outputHtml += _gen_table(dataCaps, 'Data')
+    outputHtml += _gen_table(settingsCaps, 'Settings')
+    outputHtml += _gen_table(proceduralCaps, 'Procedural')
     outputHtml += '</div><div class="section">'
     outputHtml += _gen_select_box()
     outputHtml += '''<h2>Missing Capabilities <span id="missing_len"><span></h2><br />
@@ -254,7 +269,12 @@ def generateWebPage():
 
     with open(output_HTML, "w") as f:
         f.write(outputHtml)
-    print(f"Saved Expanded Capability Set JSON file {output_HTML}")
+    print(f"""
+          The FOLIO Roles Simulator ahs been generated and saved to the local file system.
+          file: {output_HTML}
+                        ------ Script Complete -----
+""")
 
 
-generateWebPage()
+
+generate_web_page()

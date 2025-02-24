@@ -27,7 +27,8 @@ def _okapi_login():
         return cookieData
     return None
 
-def _get_permissions():
+def get_permissions():
+    print("""Pulling OKAPI Permission Reference data""")
     cookieData = _okapi_login()
     url = f"{os.getenv('OKAPI_URL')}/perms/permissions?limit=10000000"
     r = requests.get(url, cookies={'folioAccessToken': cookieData['folioAccessToken']})
@@ -35,8 +36,8 @@ def _get_permissions():
 
     with open(output_JSON, 'w') as f:
             json.dump(jsonData, f, indent=4)  # Save with indentation for readability
-    print(f"Saved OKAPI Permissions file {OKAPI_URL}")
-
-
-_get_permissions()
-print("------ Complete -----")
+    print(f"""
+          OKAPI permission information has been pulled and saved to the local file system.
+          file: {output_JSON}
+                        ------ Script Complete -----
+""")

@@ -35,25 +35,30 @@ passHeader = {
         "X-Okapi-Tenant": os.getenv("EUREKA_TENANT"),
         "Content-Type":"application/json"
 }
-def _get_capabilities():
+def get_capabilities():
+    print("""Pulling EUREKA Capabilities Reference data""")
     url = f"{os.getenv('EUREKA_URL')}/capabilities?limit=10000000"
     r = requests.get(url, cookies=passCookie, headers=passHeader)
     jsonData = r.json()
 
     with open(outputCap_JSON, 'w') as f:
             json.dump(jsonData, f, indent=4)  # Save with indentation for readability
-    print(f"Saved Capabilities JSON file {outputCap_JSON}")
+    print(f"""
+          EUREKA Capabilities Reference data has been pulled and saved to the local file system.
+          file: {outputCap_JSON}
+                        ------ Script Complete -----
+""")
 
-def _get_capability_sets():
+def get_capability_sets():
+    print("""Pulling EUREKA Capability Set Reference data""")
     url = f"{os.getenv('EUREKA_URL')}/capability-sets?limit=10000000"
     r = requests.get(url, cookies=passCookie, headers=passHeader)
     jsonData = r.json()
 
     with open(outputCapSets_JSON, 'w') as f:
             json.dump(jsonData, f, indent=4)  # Save with indentation for readability
-    print(f"Saved Capability Sets JSON file {outputCapSets_JSON}")
-
-
-_get_capabilities()
-_get_capability_sets()
-print("------ Complete -----")
+    print(f"""
+          EUREKA Capability Set Reference data has been pulled and saved to the local file system.
+          file: {outputCapSets_JSON}
+                        ------ Script Complete -----
+""")

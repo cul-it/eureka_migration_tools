@@ -14,6 +14,7 @@ output_CSV = f"{os.getenv("BASE_DIR")}{os.getenv("FILE_EUREKA_CAPABILITY_SETS_EX
 output_HTML = f"{os.getenv("BASE_DIR")}{os.getenv("FILE_EUREKA_CAPABILITY_SETS_EXPANDED")}.html"
 
 def expand_capability_sets():
+    print("""Building Comparison Data - Expanding Capability Sets """)
     # Pull the JSON file containing the Eureka Capability Sets and ingest it as JSON.
     if os.path.isfile(eurekaCapSetsPath_JSON):  # Check if the file exists
         with open(eurekaCapSetsPath_JSON, 'r') as f:
@@ -31,7 +32,7 @@ def expand_capability_sets():
         print(f'Error: JSON file not found. ${eurekaCapPath_JSON}')
 
 
-    print("------ Expanding Capability Sets -----")
+    print("------ Processing Expansions -----")
     def getCapabilities(perms, compareJson):
         rtnData = []
         if perms:
@@ -54,7 +55,11 @@ def expand_capability_sets():
         r["capabilities"] = getCapabilities(r["capabilities"], eurekaCap["capabilities"])
     with open(output_JSON, 'w') as file:
         json.dump(eurekaSets, file, indent=4)
-    print(f"Saved Expanded Capability Set JSON file {output_JSON}")
+    print(f"""
+          Expanded Capability Sets has been processed and saved to the local file system.
+          file: {output_JSON}
+                        ------ Step Complete -----
+    """)
 
     return eurekaSets
 
@@ -111,7 +116,11 @@ def generate_csv():
             'capabilities.description', 'capabilities.action'
         ])
         writer.writerows(flattened_data)
-    print(f"Saved Expanded Capability Set JSON file {output_CSV}")
+    print(f"""
+          Expanded Capability Sets has been processed and saved to the local file system.
+          file: {output_CSV}
+                        ------ Step Complete -----
+    """)
 
 def generate_wiki_page():
     print("------ Reformating to HTML / WIKI page -----")
@@ -161,8 +170,13 @@ def generate_wiki_page():
     """
     with open(output_HTML, "w") as f:
         f.write(outputHtml)
-    print(f"Saved Expanded Capability Set JSON file {output_HTML}")
+    print(f"""
+          Expanded Capability Sets has been processed and saved to the local file system.
+          file: {output_HTML}
+                        ------ Step Complete -----
+    """)
 
-expand_capability_sets()
-generate_csv()
-generate_wiki_page()
+def expand_and_save_capability_sets():
+    expand_capability_sets()
+    generate_csv()
+    generate_wiki_page()
