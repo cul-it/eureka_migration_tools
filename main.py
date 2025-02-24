@@ -41,7 +41,7 @@ def main():
     sub_menu_items = [
         "Pull Reference Data - OKAPI Permissions", "Pull Reference Data - Capability Sets", "Pull Reference Data - Capabilities", "Pull Reference Data - OKAPI Permission Sets"
         "Expand Capability Sets", "Compare OKAPI Permissions to Eureka Capabilities", "Compare Current User Permission Sets to Eureka Capabilities",
-        "Find Possible Capability Matches to OKAPI Permissions", "Build Web Interface - FOLIO Roles Simulator", "Reprocess the Capability Set Selection File (csv)"
+        "Find Possible Capability Matches to OKAPI Permissions", "Build Web Interface - FOLIO Roles Simulator", "Reprocess the Capability Set Selection File (csv)", "Main Menu"
     ]
     sub_menu_back = False
     sub_menu = TerminalMenu(
