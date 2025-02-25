@@ -1,6 +1,7 @@
 # Overview
 
-This is a set of Python tools for helping with the migration from FOLIO OKAPI platform to FOLIO Eureka platform. A lot of the scripts need to be ran in the order presented below as they build upon each other. I purposely did not combine them into a single function as to allow for the review of data at each step.
+This repository contains a set of Python tools to assist with the migration from the FOLIO OKAPI platform to the FOLIO Eureka platform. Many of the scripts need to be run in the order presented below as they build upon each other. I purposely did not combine them into a single function to allow for the review of data at each step.
+
 
 # Installation
 
@@ -13,7 +14,7 @@ pip install -r requirements.txt
 
 # Running
 
-There is an interactive menu that has been added to make it easier to run the included scripts. This menu can be accessed by running:
+An interactive menu has been added to make it easier to run the included scripts. This menu can be accessed by running:
 
 
 ```bash
@@ -23,34 +24,32 @@ python ./main.py
 ## Menu options
 
 ### 1. Pull Reference Data:
-
 This menu option runs four scripts:
-- Script one pulls all OKAPI permissions.
-- Script two pulls all EUREKA Capabilities .
-- Script three pulls all EUREKA Capability Sets.
-- Script four pulls all OKAPI User Permissions from your reference environment.
+-   Script one pulls all OKAPI permissions.
+-   Script two pulls all Eureka capabilities.
+-   Script three pulls all Eureka capability sets.
+-   Script four pulls all OKAPI user permissions from your reference environment.
 
 ### 2. Build Comparisons:
-
 This menu option runs three comparison scripts against the data pulled in the first menu option.
-- Script one add all the sub capability data to the capability sets; this option also generates a web page displaying tthe data in an easy to read format.
-- Script two compares permissions to capabilities.
-- Script three builds a comparison of current user permission sets to capabilities.
 
-### 3. Build Working CSV and HTML File: 
+-   Script one adds all the sub-capability data to the capability sets; this option also generates a web page displaying the data in an easy-to-read format.
+-   Script two compares permissions to capabilities.
+-   Script three builds a comparison of current user permission sets to capabilities.
 
-This menu option runs two scripts that builds upon the data generated in the second menu option.
-- Script one looks at the data generated from comaring the current user permissions to capabilities and looks to see what capability sets could be used to fullfill the orginal permission sets. This file can be edited and resubmitted.
-- Script two creates the "FOLIO Roles Simulator" web interface. This uses the data collected in the previous steps to create a dynamic web interface to test creating roles. 
+### 3. Build Working CSV and HTML File:   
+This menu option runs two scripts that build upon the data generated in the second menu option.
+
+-   Script one looks at the data generated from comparing the current user permissions to capabilities and identifies which capability sets could be used to fulfill the original permission sets. This file can be edited and resubmitted.
+-   Script two creates the "FOLIO Roles Simulator" web interface. This uses the data collected in the previous steps to create a dynamic web interface to test creating roles. 
 
 
 ### 4. Reprocess the Capability Set Selection File (csv):
 
-This menu option takes the CSV file generated in menu option 3 and re-precesses it.
+This menu option takes the CSV file generated in menu option 3 and reprocesses it.
 
 ### 5. Run a Specific Script: 
-
-Each of theses menu options are outlined below.
+Each of these menu options is outlined below.
 
 - **Pull Reference Data - OKAPI Permissions**: 
 - **Pull Reference Data - Capability Sets**: 
@@ -73,107 +72,87 @@ Each of theses menu options are outlined below.
 ## Data Retrieval Functions
 
 ## Pull Reference Data - OKAPI Permissions
-
- !!! Run First !!!
- This script needs to be ran first to pull all the permission sets from an OKAPI instance of FOLIO. By Default Ramsons BugFest has been added to the .env file.
+**Run First!** This script needs to be run first to pull all the permission sets from an OKAPI instance of FOLIO. By default, Ramsons BugFest has been added to the `.env` file.
 
 ## Pull Reference Data - Capability Sets
 
- !!! Run First !!!
-
-This script pulls the Capability Sets from the Eureka platform and saves them in JSON format to be used later.
-
-- _At this time i can not log in via the API, so the JSON was pulled via the web interface and saved into a JSON file._
+**Run First!** This script pulls the capability sets from the Eureka platform and saves them in JSON format to be used later.
 
 ## Pull Reference Data - Capabilities
 
- !!! Run First !!!
-
-This script pulls the Capabilities from the Eureka platform and saves them in JSON format to be used later.
+**Run First!** This script pulls the capabilities from the Eureka platform and saves them in JSON format to be used later.
 
 ## Pull Reference Data - OKAPI Permission Sets
 
-This script pulls the current permission sets form your reference system and saves them in JSON format. The reference system should be a production or test system with a current set of user permission sets.
+This script pulls the current permission sets from your reference system and saves them in JSON format. The reference system should be a production or test system with a current set of user permission sets.
 
 ---
 ## Data Formatting Functions
 
 ## Expanded Capability Sets
 
-This scripts takes the Capability set data and expands out the linked capabilities. 
+This script takes the capability set data and expands the linked capabilities.
 
 ### Files generated:
-
-- `FILE_EUREKA_CAPABILITY_SETS_EXPANDED`: JSON file listing all the capability sets and the capabilities assigned to that set
-- `FILE_EUREKA_CAPABILITY_SETS_EXPANDED_CSV`: CSV file of the same data set.
-- `FILE_EUREKA_CAPABILITY_SETS_EXPANDED_HTML`: HTML Table view that can be opened directly in the browser or saved to Confluence.
+-   `FILE_EUREKA_CAPABILITY_SETS_EXPANDED`: JSON file listing all the capability sets and the capabilities assigned to that set.
+-   `FILE_EUREKA_CAPABILITY_SETS_EXPANDED_CSV`: CSV file of the same data set.
+-   `FILE_EUREKA_CAPABILITY_SETS_EXPANDED_HTML`: HTML table view that can be opened directly in the browser or saved to Confluence.
 
 ## Compare OKAPI Permissions to Eureka Capabilities
 
-This script pulls the Capability Sets and uses the published names to match them to a OKAPI permission set. It expands on the included capabilities and permissions to show the names and UUIDS.  Two files are generated:
-`FILE_COMPARED_SETS_TO_PERMISSIONS`: JSON file with all the collected data
-`FILE_COMPARED_SETS_TO_PERMISSIONS_CSV`: CV file that can be opened in Excel for easier viewing. the first row is are the headers. The data is formatted as:
+This script pulls the capability sets and uses the published names to match them to an OKAPI permission set. It expands on the included capabilities and permissions to show the names and UUIDs. Two files are generated:
 
-**Eureka capability set**: _id	name	type	resource	description	action_
-
-**Found OKAPI Permission Set**: _okapiDisplayName_
-
-**Eureka linked Capabilities**: _subCapabilities.name	subCapabilities.type	subCapabilities.resource	subCapabilities.description	subCapabilities.action_
-
-**OKAPI sub permissions (if a Matching permission set is found)**: _okapiSubPermissions.name	okapiSubPermissions.description	okapiSubPermissions.permissionName_
+-   `FILE_COMPARED_SETS_TO_PERMISSIONS`: JSON file with all the collected data.
+-   `FILE_COMPARED_SETS_TO_PERMISSIONS_CSV`: CSV file that can be opened in Excel for easier viewing. The first row contains the headers. The data is formatted as:
+    -   **Eureka capability set**: _id, name, type, resource, description, action_
+    -   **Found OKAPI Permission Set**: _okapiDisplayName_
+    -   **Eureka linked Capabilities**: _subCapabilities.name, subCapabilities.type, subCapabilities.resource, subCapabilities.description, subCapabilities.action_
+    -   **OKAPI sub-permissions (if a matching permission set is found)**: _okapiSubPermissions.name, okapiSubPermissions.description, okapiSubPermissions.permissionName_
 
 
 ## Compare Current User Permission Sets to Eureka Capabilities
 
-This script takes current permission sets in the reference environment (visible, and mutable) expands the sub permissions. During this process it adds the supervision name, and description if they are included. it also looks to see if there is a matching capability, and lists that data. 
-This should allow a user to re-create a permission set using just capabilities. 
+This script takes current permission sets in the reference environment (visible and mutable) and expands the sub-permissions. During this process, it adds the supervision name and description if they are included. It also looks to see if there is a matching capability and lists that data. This should allow a user to recreate a permission set using just capabilities.
 
 ### Files generated:
-
-- `FILE_COMPARED_CURRENT_TO_CAPABILITIES`: JSON version of the expanded data
-- `FILE_COMPARED_CURRENT_TO_CAPABILITIES_CSV`: CSV version of the same data set
+-   `FILE_COMPARED_CURRENT_TO_CAPABILITIES`: JSON version of the expanded data.
+-   `FILE_COMPARED_CURRENT_TO_CAPABILITIES_CSV`: CSV version of the same data set.
 
 ---
 ## Create Working Documents
 
 ## Find Possible Capability Matches to OKAPI Permissions
+This script will look at the JSON generated from `compareCurrentToCapabilities.py` and compare the assigned capability sets, ranking which set may best fit a new role that will match the permission set. It does this by looking at the capability sets' individual capabilities and then matching those to the ones in the permission set. The following data will be added:
 
-This script will look that the JSON generated from `compareCurrentToCapabilities.py` and compare the assigned Compatibility sets and rank what set may bes fit in a new role that will match the Permission Set. It does this by looking at the capability Sets individual capabilitys and then matches thos to the ones in the permission set. The fallowing data will be added:
+-   **Total**: Total number of capabilities in the set.
+-   **Matching**: Number of matching capabilities to the permission set.
+-   **Ranking**: Based on the percentage of total number of capabilities that match. Items with a rank of 0 or lower than X will be ignored.
 
-**Total** - Total number of capabilities in the set
+#### Files generated:
 
-**Matching** - Number of matching Capabilities to the permission set
-
-**Ranking** - based on the percentage of total number of capabilities that match
-
-Items with a rank of 0 or lower then X will be ignored.
-
-### Files generated:
-
-- `FILE_COMPARED_CURRENT_TO_CAPABILITIES`: JSON version of the expanded data
-- `FILE_COMPARED_CURRENT_TO_CAPABILITIES_CSV`: CSV version of the same data set
+-   `FILE_COMPARED_CURRENT_TO_CAPABILITIES`: JSON version of the expanded data.
+-   `FILE_COMPARED_CURRENT_TO_CAPABILITIES_CSV`: CSV version of the same data set.
 
 ## Build Web Interface - FOLIO Roles Simulator
-
-This script will take the data produced in the previous scripts and generate a web interface that allows a user to pull up a current Permission Set and rebuild it using Capability Sets and Capabilities. No server is required to run this page it runs entirely in the users browser.
+This script will take the data produced in the previous scripts and generate a web interface that allows a user to pull up a current permission set and rebuild it using capability sets and capabilities. No server is required to run this page; it runs entirely in the user's browser.
 
 ### How to use 
-
- - Open the generated HTML in the browser of you choice (tested with Chrome)
- - Select a Permission Set from the drop down in the left hand side of the screen. (red arrow)
- - Using the interface on the right side of the screen first start to select Capability sets to fill in the majority of your missing capabilities, for your permission set. (blue arrow)
- - Use the Capabilities section to fill any smaller gaps. (blue arrow)
+-   Open the generated HTML in the browser of your choice (tested with Chrome).
+-   Select a permission set from the drop-down on the left-hand side of the screen (red arrow).
+-   Using the interface on the right side of the screen, start by selecting capability sets to fill in the majority of your missing capabilities for your permission set (blue arrow).
+-   Use the capabilities section to fill any smaller gaps (blue arrow).
 
  ![Overview of the web interface](References/image.png)
 
-In this image you can see that the Permission Set "Acq Unopen Reopen" has been selected. The three sections under the selection box are:
-- Missing Capabilities: Theres are the capabilites that the scripts have identifed that are needed to re-create the permission set, btu are currently missing. In this example since no Capability Sets or Capabilities are selected all sub Capabilities are displayed.
-- Extra Capabilities: These are capabilities that where added by selecting either Capability Sets or Capabilities on the left. 
-- Assigned Capabilities: These are the currently assigned capabilities based on what has been selected on the left.
+In this image, you can see that the permission set "Acq Unopen Reopen" has been selected. The three sections under the selection box are:
+
+-   **Missing Capabilities**: These are the capabilities that the scripts have identified as needed to recreate the permission set but are currently missing. In this example, since no capability sets or capabilities are selected, all sub-capabilities are displayed.
+-   **Extra Capabilities**: These are capabilities that were added by selecting either capability sets or capabilities on the left.
+-   **Assigned Capabilities**: These are the currently assigned capabilities based on what has been selected on the left.
 
  ![Overview of the web interface](References/image1.png)
 
-This image depicts what happens after a user has selected a Capability Set on the left. The 3 areas are adjusted to show the most current information. 
+This image depicts what happens after a user has selected a capability set on the left. The three areas are adjusted to show the most current information.
 
  ![Overview of the web interface](References/image2.png)
 
@@ -182,16 +161,12 @@ This image depicts what happens after a user has selected a Capability Set on th
 
 # Contributing
 
-Pull requests are welcome. For major changes, please open an issue first
-to discuss what you would like to change.
-
-Please also fork as needed.
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change. Please also fork as needed.
 
 # .env File
 
 ## OKAPI Env
-
-These env variables are for your OKAPI reference environment. I suggest using bugfest as you want this data to be as up-to-date as possible.
+These environment variables are for your OKAPI reference environment. I suggest using BugFest as you want this data to be as up-to-date as possible.
 
 `OKAPI_URL` =
 
@@ -202,8 +177,7 @@ These env variables are for your OKAPI reference environment. I suggest using bu
 `OKAPI_PASSWORD` =
 
 ## Eureka Env
-
-These env variables are for your Eureka reference environment. I suggest using snapshot or bugfest as you want this data to be as up-to-date as possible. 
+These environment variables are for your Eureka reference environment. I suggest using Snapshot or BugFest as you want this data to be as up-to-date as possible.
 
 `EUREKA_URL` =
 
@@ -215,7 +189,7 @@ These env variables are for your Eureka reference environment. I suggest using s
 
 ## Reference OKAPI Env
 
-These env variables are for your production or test environment. They user accout will need permissions to read Permission data. This connection is used to pull your current Permission Sets.
+These environment variables are for your production or test environment. The user account will need permissions to read permission data. This connection is used to pull your current permission sets.
 
 `REF_OKAPI_URL` =
 
