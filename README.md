@@ -45,6 +45,7 @@ This menu option runs two scripts that build upon the data generated in the seco
 
 
 ### 4. Reprocess the Capability Set Selection File (csv):
+_(not implmented yet)_
 
 This menu option takes the CSV file generated in menu option 3 and reprocesses it.
 
@@ -60,7 +61,7 @@ Each of these menu options is outlined below.
 - **Compare Current User Permission Sets to Eureka Capabilities**: 
 - **Find Possible Capability Matches to OKAPI Permissions**: 
 - **Build Web Interface - FOLIO Roles Simulator**: 
-- **Reprocess the Capability Set Selection File (csv)**: 
+- **Reprocess the Capability Set Selection File (csv)**:  _(not implmented yet)_
 - **Main Menu**: 
 
 ### 6. Quit: 

@@ -51,6 +51,7 @@ def find_possible_compatibility_sets():
             if ranking > .5 :
                 workingData.append({
                     "permissionSetDisplayName": c['displayName'],
+                    "id": c['id'],
                     "totalPermissions": c['total'],
                     "totalCapInSet": len(e['capabilities']),
                     "capabilitiesInPermissionSet": common_items_count,
