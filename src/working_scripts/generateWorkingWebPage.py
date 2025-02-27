@@ -128,7 +128,7 @@ def generate_web_page():
 
     def _gen_check_box(data):
         if data:
-            return f'''<input type="checkbox" id="{data}" name="{data}" value="{data}" onChange="updateCheck(this, '{data}')">'''
+            return f'''<input type="checkbox" id="{data}" name="{data}" value="{data}" onChange="updateCheck(this, '{data}')" />'''
         return ''
     
     def _gen_table(data, header):
@@ -347,12 +347,13 @@ def generate_web_page():
                       {json.dumps(findCap)}
                     </script>'''
     
-    outputHtml += '''<body><div class="container">
-                        <div class="header">
-                            <h1>FOLIO Roles Simulator</h1>
-                        </div>
-                        <div class="wrapper clearfix">
-                            <div class="table_area">'''
+    outputHtml += '''<body>
+                        <div class="container">
+                            <div class="header">
+                                <h1>FOLIO Roles Simulator</h1>
+                            </div>
+                            <div class="wrapper clearfix">
+                                <div class="table_area">'''
     outputHtml += '<h2>Capability Sets</h2>'
     outputHtml += _gen_table(dataCapSets, 'Data')
     outputHtml += _gen_table(settingsCapSets, 'Settings')
@@ -361,51 +362,55 @@ def generate_web_page():
     outputHtml += _gen_table(dataCaps, 'Data')
     outputHtml += _gen_table(settingsCaps, 'Settings')
     outputHtml += _gen_table(proceduralCaps, 'Procedural')
-    outputHtml += '</div><div class="section">'
+    outputHtml += '''
+                                </div>
+                            <div class="section">'''
     outputHtml += _gen_select_box()
     outputHtml += '''
-                    <div class="panel" id="panel1">
-                        <div class="panel-header" onclick="togglePanel('panel1')">
-                            <h3>Missing Capabilities <span id="missing_len"><span></h3>
-                            <span style=" font-size: small; font-style: italic;">Based on the Permission set these Capabilities are missing</span>
-                        </div>
-                        <div class="panel-content expanded" >
-                            <div id="missing_items" class="table-container" ></div>
-                        </div>
-                    </div>
-                    <br />
-                    <div class="panel" id="panel4">
-                        <div class="panel-header" onclick="togglePanel('panel4')">
-                            <h3>Suggested Capability Sets</h3>
-                            <span style=" font-size: small; font-style: italic;">Suggested Capabilities sets; these are ranked by the number of matching capabilities in the set</span>
-                        </div>
-                        <div class="panel-content expanded" >
-                            <div id="suggested_sets" class="table-container" ></div>
-                        </div>
-                    </div>
-                    <br />
-                    <div class="panel" id="panel2">
-                        <div class="panel-header" onclick="togglePanel('panel2')">
-                            <h3>Extra Capabilities <span id="extra_len"><span></h3>
-                            <span style=" font-size: small; font-style: italic;">Extra Capabilities that will be assigned based on your selection</span>
-                        </div>
-                        <div class="panel-content expanded" >
-                            <div id="extra_items" class="table-container" ></div>
-                        </div>
-                    </div>
-                    <br />
-                    <div class="panel" id="panel3">
-                        <div class="panel-header" onclick="togglePanel('panel3')">
-                            <h3>Assigned Capabilities <span id="assigned_len"><span></h3>
-                            <span style=" font-size: small; font-style: italic;">All Capabilities that will be assigned based on your selection</span>
-                        </div>
-                        <div class="panel-content expanded" >
-                            <div id="assigned_items" class="table-container" ></div>
-                        </div>
-                    </div>
+                                <div class="panel" id="panel1">
+                                    <div class="panel-header" onclick="togglePanel('panel1')">
+                                        <h3>Missing Capabilities <span id="missing_len"><span></h3>
+                                        <span style=" font-size: small; font-style: italic;">Based on the Permission set these Capabilities are missing</span>
+                                    </div>
+                                    <div class="panel-content expanded" >
+                                        <div id="missing_items" class="table-container" ></div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="panel" id="panel4">
+                                    <div class="panel-header" onclick="togglePanel('panel4')">
+                                        <h3>Suggested Capability Sets</h3>
+                                        <span style=" font-size: small; font-style: italic;">Suggested Capabilities sets; these are ranked by the number of matching capabilities in the set</span>
+                                    </div>
+                                    <div class="panel-content expanded" >
+                                        <div id="suggested_sets" class="table-container" ></div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="panel" id="panel2">
+                                    <div class="panel-header" onclick="togglePanel('panel2')">
+                                        <h3>Extra Capabilities <span id="extra_len"><span></h3>
+                                        <span style=" font-size: small; font-style: italic;">Extra Capabilities that will be assigned based on your selection</span>
+                                    </div>
+                                    <div class="panel-content expanded" >
+                                        <div id="extra_items" class="table-container" ></div>
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="panel" id="panel3">
+                                    <div class="panel-header" onclick="togglePanel('panel3')">
+                                        <h3>Assigned Capabilities <span id="assigned_len"><span></h3>
+                                        <span style=" font-size: small; font-style: italic;">All Capabilities that will be assigned based on your selection</span>
+                                    </div>
+                                    <div class="panel-content expanded" >
+                                        <div id="assigned_items" class="table-container" ></div>
+                                    </div>
+                                </div>
                     '''
 
-    outputHtml += '</div></div></div></body>'
+    outputHtml += '''       </div>
+                        </div>
+                    </body>'''
 
     with open(output_HTML, "w") as f:
         f.write(outputHtml)
