@@ -82,6 +82,13 @@ def generate_web_page():
             "action": c['action'],
             "description": c['description'] if "description" in c else ''
         }
+    for c in eurCapSet:
+        newCaps[c['id']] = {
+            "resource": c['resource'],
+            "type": c['type'],
+            "action": c['action'],
+            "description": c['description'] if "description" in c else ''
+        }
     
 
     def _filter_results(data, filter):
@@ -168,171 +175,32 @@ def generate_web_page():
                     '''
         for o in okapiCur:
             tmpHtml += f'<option value="{o['id']}">{o['displayName']}</option>'
-        tmpHtml += '</select>'
+        tmpHtml += '</select> <br /><br />'
+        tmpHtml += '''
+         <button onClick="exportOne()">Export Capabilities</button>
+         <button onClick="exportTwo()">Export Details</button>
+        <br /><br />'''
         return tmpHtml
 
     #### Generate the HTML
-    outputHtml = """<style>
-            .table-container {
-                width: 100%;
-                height: 400px; /* Adjust the height as needed */
-                overflow-y: auto;
-                border: 1px solid #ccc;
-            }
 
-            table {
-                width: 100%;
-                border-collapse: collapse;
-                font-family: Arial, Helvetica, sans-serif;
-                font-size: small;
-            }
+    
+    with open('./src/includes/webCss.css', 'r') as fileCss:
+        css_content = fileCss.read()
 
-            th, td {
-                padding: 8px;
-                text-align: left;
-                border-bottom: 1px solid #ddd;
-            }
-
-            tr:hover {
-                background-color: #ddd;
-            }
-            tr:nth-child(even){
-                background-color: #f2f2f2;
-            }
-            thead th {
-                position: sticky;
-                top: 0;
-                background-color: #04AA6D;
-                color: white;
-                z-index: 1;
-            }
-            .container { width: 100%; background: #f2f2f2; }
-            .table_area, .section {float: left;padding: 20px;min-height: 170px;box-sizing: border-box;}
-            .table_area {  width: 60%; overflow: scroll; max-height: 90%;}
-            .section { width: 40%; background: #d4d7dc; }
-            .clearfix:after { content: "."; display: block; height: 0; clear: both; visibility: hidden; }
-            .data_display: { position: static; overflow: auto; max-height: 400px; width: 100%; }
-            .panel{border:1px solid #ccc;border-radius:4px;overflow:hidden; auto}
-            .panel-header{background-color:#f1f1f1;padding:1px;cursor:pointer}
-            .panel-content{max-height:0;overflow:hidden;transition:max-height .3s ease}
-            .panel-content.expanded{max-height:300px}
-        </style>"""
-    outputHtml += '''<script  type="text/javascript">
-                        var globalList = []
-                        var globalSel = ''
-                        function updateCheck1(name){                          
-                            var checkBox = document.getElementById(name);
-                            checkBox.checked = true;
-                            updateCheckData();
-                        }
-                        function updateCheck(checkbox, name) {
-                            updateCheckData();
-                        }
-                        function updateCheckData(){
-                            const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
-                            const ary = [];
-                            checkboxes.forEach((checkbox) => {
-                                var ckVal = checkbox.value
-                                if (!ckVal.endsWith("_b")){
-                                    ary.push(ckVal);
-                                }
-                            });
-                            selectedValues = [...new Set(ary)]
-                            var cap_sets = JSON.parse(document.getElementById('cap_sets').textContent);
-                            var cap_data = JSON.parse(document.getElementById('cap_data').textContent);
-                            var caps = [];
-                            selectedValues.forEach((c) => {
-                                if( cap_sets[c] ){
-                                    caps = [ ...caps, ...cap_sets[c]]
-                                }else{
-                                    caps.push(c)
-                                }
-                            });
-                            globalList = [...new Set(caps)];
-                            updateDisplays();
-                        }
-                        function updateList(value){
-                            if ( value == 000 ){
-                                var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-                                checkboxes.forEach(checkbox => {
-                                    checkbox.checked = false;
-                                });
-                                globalList = []
-                                document.getElementById('missing_items').innerHTML = "";
-                                document.getElementById('extra_items').innerHTML = "";
-                                globalSel = '';
-                            }else{
-                                globalSel = value;
-                                updateDisplays();
-                            }
-                        }
-                        function buildList(data){
-                            var cap_data = JSON.parse(document.getElementById('cap_data').textContent);
-                            var rtnHtml = "<ul>"
-                            data.forEach( item => {
-                                rtnHtml += `
-                                <li>${cap_data[item]['resource']} (<i>${cap_data[item]['type']}</i>) -> <b>${cap_data[item]['action']}</b>
-                                <br />
-                                <span style="font-size: small;" >${cap_data[item]['description']}</span></li>`;
-                            })
-                            rtnHtml += "</ul>"
-                            return rtnHtml
-                        }function buildTable(data) {
-                            var rtnHtml = `<table id="mainTable">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Ranking</th>
-                                                        <th>Cap/Matched</th>
-                                                        <th>Type</th>
-                                                        <th>Name</th>
-                                                        <th>Action</th>
-                                                        <th>Selected</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>`;
-                            data.forEach(item => {
-                                rtnHtml += `
-                                    <tr>
-                                        <td>${item['ranking']}</td>
-                                        <td>${item['totalCapInSet']}/${item['capabilitiesInPermissionSet']}</td>
-                                        <td>${item['eurekaType']}</td>
-                                        <td>${item['eurekaResource']}</td>
-                                        <td>${item['eurekaAction']}</td>
-                                        <td><button onClick="updateCheck1('${item['eurekaId']}')">Add</button></td>
-                                    </tr>`;
-                            });
-                            rtnHtml += "</tbody></table>";
-                            return rtnHtml;
-                        }
-                        function updateDisplays(){
-                                var okapi_data = JSON.parse(document.getElementById('okapi_data').textContent);
-                                var cap_sets = JSON.parse(document.getElementById('cap_sets').textContent);
-                                var find_cap = JSON.parse(document.getElementById('find_sets').textContent);
-                                var suggest = []
-                                find_cap.forEach(item => {
-                                    if ( item['id'] == globalSel ){
-                                        suggest.push(item)
-                                    }
-                                })
-                                var okPerms = okapi_data[globalSel]['allEurekaPermissions']
-                                var missing = okPerms.filter(x => !globalList.includes(x));
-                                const set1 = new Set(okPerms)
-                                var extra = globalList.filter(x => !set1.has(x));
-                                document.getElementById('missing_items').innerHTML = buildList(missing);
-                                document.getElementById('extra_items').innerHTML = buildList(extra);
-                                document.getElementById('assigned_items').innerHTML = buildList(globalList);
-                                document.getElementById('suggested_sets').innerHTML = buildTable(suggest);
-                                document.getElementById('missing_len').innerHTML = "(" + missing.length + ")";
-                                document.getElementById('extra_len').innerHTML = "(" + extra.length + ")";
-                                document.getElementById('assigned_len').innerHTML = "(" + globalList.length + ")";
-                        
-                        }
-                        function togglePanel(id) {
-                            const panelContent = document.querySelector(`#${id} .panel-content`);
-                            panelContent.classList.toggle('expanded');
-                        }
+    outputHtml = f'''
+                    <style>
+                    {css_content}
+                    </style>
+                '''
+    
+    with open('./src/includes/webJsFile.js', 'r') as fileJs:
+        js_content = fileJs.read()
+    outputHtml += f'''
+                    <script>
+                    {js_content}
                     </script>
-                    '''
+                '''
     outputHtml += f'''
                     <script id="okapi_data" type="application/json">
                         {json.dumps(nwOkapiCurData)}
