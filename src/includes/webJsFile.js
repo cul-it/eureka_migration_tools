@@ -134,7 +134,8 @@ function exportOne() {
     globalSelInd.forEach(item => {
         exportData.push(['Capability', cap_data[item]['type'], cap_data[item]['resource'], cap_data[item]['action']])
     })
-    downloadCSV(exportData, 'my_data.csv')
+    var okapi_data = JSON.parse(document.getElementById('okapi_data').textContent);
+    downloadCSV(exportData, `${okapi_data[globalSel]['displayName']}.csv`)
 }
 function downloadCSV(data, filename='data.csv') {
     const csvString = data.map(row => row.join(',')).join('\n');
