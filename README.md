@@ -61,6 +61,7 @@ Each of these menu options is outlined below.
 - **Compare Current User Permission Sets to Eureka Capabilities**: 
 - **Find Possible Capability Matches to OKAPI Permissions**: 
 - **Build Web Interface - FOLIO Roles Simulator**: 
+- **Build Web Interface - FOLIO Roles Simulator Without Comparisons**: 
 - **Reprocess the Capability Set Selection File (csv)**:  _(not implmented yet)_
 - **Main Menu**: 
 
@@ -157,6 +158,8 @@ This image depicts what happens after a user has selected a capability set on th
 
  ![Overview of the web interface](References/image2.png)
 
+## Build Web Interface - FOLIO Roles Simulator Without Comparisons
+This is the same interface as above but without the ability to select a current permission set in FOLIO Okapi and see missing extra capabilities. Instead this just lists the capabilities assigned by selected options form the table on the left. Results can be exported to a CSV file for later use.
 
 ## Reprocess the Capability Set Selection File (csv)
 
