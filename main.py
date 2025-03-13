@@ -9,6 +9,7 @@ from src.format_scripts.compareCurrentToCapabilities import compare_current_perm
 from src.working_scripts.findMyCapabilitySets import find_possible_compatibility_sets
 from src.working_scripts.generateWorkingWebPage import generate_web_page
 from src.working_scripts.processNewPermissions import reprocess_cap_sets
+from src.working_scripts.generateSelectWebPage import generate_mock_web_page
 
 def main():
     main_menu_title = """  
@@ -41,7 +42,7 @@ def main():
     sub_menu_items = [
         "Pull Reference Data - OKAPI Permissions", "Pull Reference Data - Capability Sets", "Pull Reference Data - Capabilities", "Pull Reference Data - OKAPI Permission Sets"
         "Expand Capability Sets", "Compare OKAPI Permissions to Eureka Capabilities", "Compare Current User Permission Sets to Eureka Capabilities",
-        "Find Possible Capability Matches to OKAPI Permissions", "Build Web Interface - FOLIO Roles Simulator", "Reprocess the Capability Set Selection File (csv)", "Main Menu"
+        "Find Possible Capability Matches to OKAPI Permissions", "Build Web Interface - FOLIO Roles Simulator", "Build Web Interface 2 - FOLIO Roles Simulator w/o comparison", "Reprocess the Capability Set Selection File (csv)", "Main Menu"
     ]
     sub_menu_back = False
     sub_menu = TerminalMenu(
@@ -73,6 +74,7 @@ def main():
             print("Building Working CSV and HTML File")
             find_possible_compatibility_sets()
             generate_web_page()
+            generate_mock_web_page()
             print("<<<<<<< Process Complete >>>>>>>")
             time.sleep(5)
         elif main_sel == 3:
@@ -120,10 +122,14 @@ def main():
                     generate_web_page()
                     time.sleep(5)
                 elif sub_sel == 9:
+                    print("Build Web Interface - FOLIO Roles Simulator with out comparison >>>>>>>")
+                    generate_mock_web_page()
+                    time.sleep(5)
+                elif sub_sel == 10:
                     print("Reprocessing the CSV file to find more capability sets >>>>>>>")
                     reprocess_cap_sets()
                     time.sleep(5)
-                elif sub_sel == 10 or sub_sel == None:
+                elif sub_sel == 11 or sub_sel == None:
                     sub_menu_back = True
                     print("Back Selected")
         elif main_sel == 5 or main_sel == None:
