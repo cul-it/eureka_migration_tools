@@ -287,7 +287,3 @@ def generate_web_page():
           file: {output_HTML}
                         ------ Script Complete -----
 """)
-
-
-
-generate_web_page()
